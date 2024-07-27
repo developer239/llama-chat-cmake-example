@@ -8,7 +8,7 @@ int main() {
     return 1;
   }
 
-  std::string response = llama.RunQuery("Hello.", 100);
+  std::string response = llama.RunQuery("Tell me a story.", 100);
   std::cout << "Response: " << response << std::endl;
 
   return 0;
