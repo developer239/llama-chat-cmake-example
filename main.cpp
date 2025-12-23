@@ -1,9 +1,21 @@
 #include <iostream>
+#include <vector>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 #include "llama-chat.h"
 
 int main() {
   const auto IMAGE_PATH = "../images/kapybara.jpg";
+
+  // Load image using stb_image (force 3 channels for RGB)
+  int width, height, channels;
+  unsigned char* imageData = stbi_load(IMAGE_PATH, &width, &height, &channels, 3);
+  if (!imageData) {
+    std::cerr << "Failed to load image: " << IMAGE_PATH << std::endl;
+    return 1;
+  }
 
   LlamaChat llama;
 
@@ -14,6 +26,7 @@ int main() {
 
   if (!llama.InitializeModel("../models/gemma-3-4b-it-f16.gguf", modelParams)) {
     std::cerr << "Failed to initialize the model." << std::endl;
+    stbi_image_free(imageData);
     return 1;
   }
 
@@ -23,6 +36,7 @@ int main() {
 
   if (!llama.InitializeContext(contextParams)) {
     std::cerr << "Failed to initialize the context." << std::endl;
+    stbi_image_free(imageData);
     return 1;
   }
 
@@ -36,7 +50,14 @@ int main() {
   std::cout << "User: What do you see in this image?" << std::endl;
   std::cout << "Assistant: ";
 
-  ImageInput image = ImageInput::FromPath(IMAGE_PATH);
+  ImageInput image = ImageInput::FromRGBData(
+      static_cast<uint32_t>(width),
+      static_cast<uint32_t>(height),
+      imageData
+  );
+
+  stbi_image_free(imageData);  // Free after creating ImageInput (data is copied)
+
   llama.Prompt(
       "What do you see in this image?",
       [](const std::string& piece) { std::cout << piece << std::flush; },
@@ -45,7 +66,8 @@ int main() {
   std::cout << std::endl;
 
   std::cout << "\n=== Example 2: Follow-up Question ===" << std::endl;
-  std::cout << "User: What is your favorite animal and why is it capybara?" << std::endl;
+  std::cout << "User: What is your favorite animal and why is it capybara?"
+            << std::endl;
   std::cout << "Assistant: ";
 
   llama.Prompt(

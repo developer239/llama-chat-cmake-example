@@ -7,3 +7,7 @@ add_executable(llama_wrapped_cmake_example main.cpp)
 
 add_subdirectory(externals/llama-chat)
 target_link_libraries(llama_wrapped_cmake_example PRIVATE LlamaChat)
+
+target_include_directories(llama_wrapped_cmake_example PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/externals/stb_image
+)
