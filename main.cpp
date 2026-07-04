@@ -53,14 +53,14 @@ int main() {
 
   // ---- 1. Simple text-only prompt: the library doubles as a local LLM. ----
   std::cout << "\n=== 1. Simple text prompt ===\n";
-  GenerateParams textOnly;
+  PromptParams textOnly;
   textOnly.prompt = "In one sentence, what is a capybara?";
   textOnly.maxTokens = 100;
 
-  GenerateResult text = llama.Generate(textOnly, PrintPiece);
+  PromptResult text = llama.Prompt(textOnly, PrintPiece);
   std::cout << "\n";
   if (!text.ok) {
-    std::cerr << "Generate failed: " << text.error << std::endl;
+    std::cerr << "Prompt failed: " << text.error << std::endl;
     return 1;
   }
 
@@ -68,11 +68,11 @@ int main() {
   std::cout << "\n=== 2. Image vision (" << kImagePath << ") ===\n";
   startedAt = std::chrono::steady_clock::now();
 
-  GenerateResult described =
+  PromptResult described =
       llama.DescribeImage(kImagePath, "Describe this image.", PrintPiece);
   std::cout << "\n";
   if (!described.ok) {
-    std::cerr << "Generate failed: " << described.error << std::endl;
+    std::cerr << "Prompt failed: " << described.error << std::endl;
     return 1;
   }
   std::cout << "(" << SecondsSince(startedAt) << "s, "
@@ -91,7 +91,7 @@ int main() {
   }
   std::cout << "(sampled " << frames.framePaths.size() << " frames)\n";
 
-  GenerateParams video;
+  PromptParams video;
   video.prompt =
       "These images are frames sampled from a single video, in order. "
       "Study them and reason about the sequence: is this one continuous "
@@ -101,12 +101,12 @@ int main() {
       "frame and the last? Be as precise as possible.";
   video.imagePaths = frames.framePaths;
 
-  GenerateResult summary = llama.Generate(video, PrintPiece);
+  PromptResult summary = llama.Prompt(video, PrintPiece);
   std::cout << "\n";
-  CleanupVideoFrames(frames);  // frames are read inside Generate()
+  CleanupVideoFrames(frames);  // frames are read inside Prompt()
 
   if (!summary.ok) {
-    std::cerr << "Generate failed: " << summary.error << std::endl;
+    std::cerr << "Prompt failed: " << summary.error << std::endl;
     return 1;
   }
   std::cout << "(" << summary.promptTokenCount << " prompt tokens for "
