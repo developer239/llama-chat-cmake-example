@@ -93,8 +93,12 @@ int main() {
 
   GenerateParams video;
   video.prompt =
-      "These images are frames sampled from one video, in order. "
-      "Describe what happens.";
+      "These images are frames sampled from a single video, in order. "
+      "Study them and reason about the sequence: is this one continuous "
+      "scene or several distinct scenes? What is happening in each scene? "
+      "How are the frames connected to one another - what changes from one "
+      "to the next, and what stays the same, including between the first "
+      "frame and the last? Be as precise as possible.";
   video.imagePaths = frames.framePaths;
 
   GenerateResult summary = llama.Generate(video, PrintPiece);
