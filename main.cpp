@@ -12,7 +12,7 @@
 #include <iostream>
 #include <string>
 
-#include "llama-vision.h"
+#include "llameworker.h"
 #include "video-frames.h"
 
 namespace {
