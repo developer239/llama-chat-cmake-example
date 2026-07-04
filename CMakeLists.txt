@@ -1,20 +1,13 @@
-cmake_minimum_required(VERSION 3.28)
-project(llama_wrapped_cmake_example)
+cmake_minimum_required(VERSION 3.24)
+project(llama_vision_example LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(llama_wrapped_cmake_example main.cpp)
-
-# OpenCV
-if(APPLE)
-    find_package(OpenCV REQUIRED)
-    target_link_libraries(llama_wrapped_cmake_example PRIVATE "-framework Carbon")
-    target_link_libraries(llama_wrapped_cmake_example PRIVATE ${OpenCV_LIBS})
-elseif(WIN32)
-    set(OpenCV_DIR "C:/tools/opencv/build/x64/vc15/lib")
-    find_package(OpenCV REQUIRED)
-    target_link_libraries(llama_wrapped_cmake_example PRIVATE ${OpenCV_LIBS})
-endif()
-
+# The entire integration: pull in the library (which brings llama.cpp
+# along) and link the target.
 add_subdirectory(externals/llama-chat)
-target_link_libraries(llama_wrapped_cmake_example PRIVATE LlamaChat)
+
+add_executable(llama_vision_example main.cpp)
+target_link_libraries(llama_vision_example PRIVATE LlamaVision)
