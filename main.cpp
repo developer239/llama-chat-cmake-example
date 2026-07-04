@@ -1,4 +1,4 @@
-// LlamaVision integration example.
+// llameworker integration example.
 //
 // A guided tour of the v2 API with hard-coded targets (no CLI params):
 // one-time model load (the expensive step), then three tests in order -
@@ -6,7 +6,7 @@
 // frame sampling.
 //
 // Run it from the build directory (paths below are relative to it):
-//   ./llama_vision_example
+//   ./llameworker_example
 
 #include <chrono>
 #include <iostream>
@@ -34,7 +34,7 @@ void PrintPiece(const std::string& piece) {
 }  // namespace
 
 int main() {
-  LlamaVision llama;
+  LlameWorker llameworker;
 
   // ---- Load once: this is the only expensive step. ----
   VisionModelParams modelParams;
@@ -44,8 +44,8 @@ int main() {
       "You are a helpful assistant. Answer clearly and to the point.";
 
   auto startedAt = std::chrono::steady_clock::now();
-  if (!llama.Load(modelParams)) {
-    std::cerr << "Load failed: " << llama.LoadError() << std::endl;
+  if (!llameworker.Load(modelParams)) {
+    std::cerr << "Load failed: " << llameworker.LoadError() << std::endl;
     return 1;
   }
   std::cout << "Model loaded in " << SecondsSince(startedAt)
@@ -57,7 +57,7 @@ int main() {
   textOnly.prompt = "In one sentence, what is a capybara?";
   textOnly.maxTokens = 100;
 
-  PromptResult text = llama.Prompt(textOnly, PrintPiece);
+  PromptResult text = llameworker.Prompt(textOnly, PrintPiece);
   std::cout << "\n";
   if (!text.ok) {
     std::cerr << "Prompt failed: " << text.error << std::endl;
@@ -69,7 +69,7 @@ int main() {
   startedAt = std::chrono::steady_clock::now();
 
   PromptResult described =
-      llama.DescribeImage(kImagePath, "Describe this image.", PrintPiece);
+      llameworker.DescribeImage(kImagePath, "Describe this image.", PrintPiece);
   std::cout << "\n";
   if (!described.ok) {
     std::cerr << "Prompt failed: " << described.error << std::endl;
@@ -101,7 +101,7 @@ int main() {
       "frame and the last? Be as precise as possible.";
   video.imagePaths = frames.framePaths;
 
-  PromptResult summary = llama.Prompt(video, PrintPiece);
+  PromptResult summary = llameworker.Prompt(video, PrintPiece);
   std::cout << "\n";
   CleanupVideoFrames(frames);  // frames are read inside Prompt()
 

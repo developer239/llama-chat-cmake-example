@@ -1,14 +1,14 @@
 # Llame Worker Example
 
 Shows how to consume [llame-worker](https://github.com/developer239/llame-worker)
-(the `LlamaVision` library) from a plain CMake project. One-off multimodal
+(the `llameworker` library) from a plain CMake project. One-off multimodal
 prompts against a local GGUF model: text, image, and video.
 
 The entire integration is two CMake lines:
 
 ```cmake
 add_subdirectory(externals/llame-worker)
-target_link_libraries(llama_vision_example PRIVATE LlamaVision)
+target_link_libraries(llameworker_example PRIVATE llameworker)
 ```
 
 ## Requirements
@@ -42,7 +42,7 @@ git submodule update --init --recursive
 cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
 cd build
-./llama_vision_example
+./llameworker_example
 ```
 
 Build **Release**: a Debug build of llama.cpp is an order of magnitude
