@@ -18,6 +18,18 @@ A vision-capable GGUF model **and** its matching multimodal projector
 `images/` (both paths are hard-coded in `main.cpp`). For video, `ffmpeg`
 (with `ffprobe`) must be on PATH.
 
+Ready-to-use vision GGUFs (model + mmproj) live in the ggml-org
+[multimodal collection](https://huggingface.co/collections/ggml-org/multimodal-ggufs-68244e01ff1f39e5bebeeedc)
+on Hugging Face. Gemma 3 is the safe default; for stronger text/UI reading
+try Qwen2.5-VL, InternVL3, or Pixtral. Download with the `hf` CLI, then
+point the constants at the top of `main.cpp` at the files:
+
+```bash
+hf download ggml-org/Qwen2.5-VL-7B-Instruct-GGUF \
+  Qwen2.5-VL-7B-Instruct-Q8_0.gguf mmproj-Qwen2.5-VL-7B-Instruct-f16.gguf \
+  --local-dir models
+```
+
 ## Setup
 
 ```bash
